@@ -7,8 +7,8 @@
 
 
 [![Version](https://img.shields.io/badge/rustc-1.49+-ab6000.svg)](https://blog.rust-lang.org/2020/03/12/Rust-1.46.html)
-[![Build Status](https://travis-ci.org/actix/actix-web.svg?branch=master)](https://travis-ci.org/actix/actix-web)
-[![codecov](https://codecov.io/gh/actix/actix-web/branch/master/graph/badge.svg)](https://codecov.io/gh/actix/actix-web)
+[![Build Status](https://github.com/B0ud/actix-gym-training/workflows/Rust/badge.svg)](https://github.com/B0ud/actix-gym-training/actions)
+[![codecov](https://codecov.io/gh/B0ud/actix-gym-training/branch/master/graph/badge.svg?token=3qdrW1eB9m)](https://codecov.io/gh/B0ud/actix-gym-training)
 
   </p>
 </div>
@@ -19,6 +19,7 @@ In the past I did a quick test by doing a synchronous implementation : [gym-sche
 
 In this second iteration I would like to explore another option: async db adapters
 
+https://github.com/prisma/quaint
 
 ### Async Options
 
