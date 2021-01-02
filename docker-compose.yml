@@ -1,0 +1,20 @@
+version: '3'
+services:
+  database:
+    image: postgres:13.1
+    container_name: postgres-actix-gym-training
+    restart: always
+    environment:
+      - POSTGRES_DB=actix-gym-training
+      - POSTGRES_PASSWORD=changeit
+    ports:
+      - "5432:5432"
+    #networks:
+    #  - back-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+#networks:
+#  back-network:
