@@ -11,3 +11,8 @@ async fn find(id: web::Path<Uuid>, db_pool: web::Data<PgPool>) -> impl Responder
         _ => HttpResponse::BadRequest().body("Exercise not found")
     }
 }
+
+// function that will be called on new Application to configure routes for this module
+pub fn init(cfg: &mut web::ServiceConfig) {
+    cfg.service(find);
+}

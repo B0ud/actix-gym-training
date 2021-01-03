@@ -60,6 +60,7 @@ async fn main() -> Result<()> {
             .service(echo)
             .service(stream)
             .route("/hey", web::get().to(manual_hello))
+            .configure(routes::init)
     });
 
     server = if let Some(listener) = listenfd.take_tcp_listener(0)? {
