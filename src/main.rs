@@ -1,3 +1,6 @@
+mod models;
+mod routes;
+
 use actix_web::{get, post, web, App, Error, HttpResponse, HttpServer, Responder};
 use dotenv::dotenv;
 use env_logger::{Env, Target};
@@ -59,7 +62,7 @@ async fn main() -> Result<()> {
             .route("/hey", web::get().to(manual_hello))
     });
 
-    server = if let Some(listener) = listenfd.take_tcp_listener(0).unwrap() {
+    server = if let Some(listener) = listenfd.take_tcp_listener(0)? {
         server.listen(listener).unwrap()
     } else {
         let host = env::var("HOST").expect("HOST is not set in .env file");
