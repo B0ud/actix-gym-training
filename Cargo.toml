@@ -9,3 +9,10 @@ edition = "2018"
 [dependencies]
 actix-web = "3"
 futures = "0.3"
+sqlx = { version = "0.4.2", features = [ "postgres", "runtime-actix-native-tls" ] }
+#sqlx = { version = "0.3", features = [ "postgres" ] }
+log = "0.4.0"
+env_logger = "0.8.1"
+dotenv = "0.15.0"
+listenfd = "0.3.3"
+anyhow = "1.0.37"
