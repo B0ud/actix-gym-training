@@ -20,13 +20,13 @@ CREATE TABLE Exercise (
                            Category varchar(50) NOT NULL,
                            Category_Icon varchar(50),
                            Image varchar(50),
-                           Create_dAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
-                           Update_dAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
+                           Created_At TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+                           Updated_At TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
 );
 
 CREATE TABLE Exercise_Muscle_Tag (
-                                Muscle_Tag_Id UUID REFERENCES Muscle_Tag (Muscle_Tag_Id),
                                 Exercise_Id UUID REFERENCES Exercise(Exercise_Id),
+                                Muscle_Tag_Id UUID REFERENCES Muscle_Tag (Muscle_Tag_Id),
                                 CONSTRAINT Muscle_Tag_Exercice_pk PRIMARY KEY (Exercise_Id, Muscle_Tag_Id)
 );
 
