@@ -47,4 +47,30 @@ impl Exercise {
         })
     }
 
+    pub async fn find_all(pool: &PgPool) ->  Result<Vec<Exercise>> {
+        let mut exercises = vec![];
+        let recs = sqlx::query!(
+                r#"
+                    SELECT * FROM exercise ORDER BY name
+                "#
+            )
+            .fetch_all(&*pool)
+            .await?;
+
+        for rec in recs {
+            exercises.push(Exercise {
+                id: rec.exercise_id,
+                name: rec.name,
+                description: rec.description,
+                category: rec.category,
+                category_icon: rec.category_icon,
+                image: rec.image,
+                created_at: rec.created_at,
+                updated_at: rec.updated_at,
+            });
+        }
+
+        Ok(exercises)
+    }
+
 }

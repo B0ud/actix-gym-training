@@ -12,7 +12,19 @@ async fn find(id: web::Path<Uuid>, db_pool: web::Data<PgPool>) -> impl Responder
     }
 }
 
+
+#[get("/exercises")]
+async fn find_all( db_pool: web::Data<PgPool>) -> impl Responder {
+    let result = Exercise::find_all( db_pool.get_ref()).await;
+    match result {
+        Ok(exercise) => HttpResponse::Ok().json(exercise),
+        _ => HttpResponse::BadRequest().body("Exercise not found")
+    }
+}
+
+
 // function that will be called on new Application to configure routes for this module
 pub fn init(cfg: &mut web::ServiceConfig) {
     cfg.service(find);
+    cfg.service(find_all);
 }
