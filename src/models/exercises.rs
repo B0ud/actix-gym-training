@@ -28,7 +28,7 @@ impl Exercise {
     pub async fn find_by_id(id: Uuid, pool: &PgPool) -> Result<Exercise> {
         let rec = sqlx::query!(
                 r#"
-                    SELECT * FROM exercises WHERE id = $1
+                    SELECT * FROM exercise WHERE exercise_id = $1
                 "#,
                 id
             )
@@ -36,7 +36,7 @@ impl Exercise {
             .await?;
 
         Ok(Exercise {
-            id: rec.id,
+            id: rec.exercise_id,
             name: rec.name,
             description: rec.description,
             category: rec.category,
