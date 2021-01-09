@@ -1,38 +1,53 @@
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
-CREATE TABLE trainings (
-                           id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-                           name TEXT NOT NULL UNIQUE,
-                           description TEXT,
-                           image TEXT,
-                           created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
-                           updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
+
+
+
+CREATE TABLE MuscleTag (
+                             MuscleTagId UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+                             Name varchar(50) NOT NULL UNIQUE,
+                             Code varchar(50) NOT NULL UNIQUE,
+                             Description varchar(50),
+                             Image varchar(50),
+                             CreatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+                             UpdatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
+);
+
+CREATE TABLE Exercise (
+                           ExerciseId UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+                           Name varchar(50) NOT NULL UNIQUE,
+                           Description varchar(50),
+                           Category varchar(50) NOT NULL,
+                           CategoryIcon varchar(50),
+                           Image varchar(50),
+                           CreatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+                           UpdatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
+);
+
+CREATE TABLE ExerciseMuscleTag (
+                                MuscleTagId UUID REFERENCES MuscleTag (MuscleTagId),
+                                ExerciseId UUID REFERENCES Exercise(ExerciseId),
+                                CONSTRAINT Muscle_Tag_Exercice_pk PRIMARY KEY (ExerciseId, MuscleTagId)
+);
+
+CREATE TABLE Workout
+(
+    WorkoutId UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    "Date"    date DEFAULT CURRENT_DATE NOT NULL,
+    "Type"      varchar(50) NOT NULL
+);
+
+CREATE TABLE WorkoutRep
+(
+    WorkoutRepId     UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    ExerciseId       UUID REFERENCES Exercise (ExerciseId) NOT NULL,
+    WorkoutId        UUID REFERENCES Workout (WorkoutId) NOT NULL,
+    Rep              Integer NOT NULL,
+    DropSetRep       Integer NULL,
+    Weight           Numeric NOT NULL,
+    WeightDropSetRep Numeric NULL
 );
 
 
-CREATE TABLE muscle_tags (
-                             id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-                             name TEXT NOT NULL UNIQUE,
-                             code TEXT NOT NULL UNIQUE,
-                             description TEXT,
-                             image TEXT,
-                             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
-                             updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
-);
 
-CREATE TABLE exercises (
-                           id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-                           name TEXT NOT NULL UNIQUE,
-                           description TEXT,
-                           category TEXT NOT NULL,
-                           category_icon TEXT,
-                           image TEXT,
-                           created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
-                           updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
-);
 
-CREATE TABLE asso_muscle_tags_exercises (
-                                            exercise_id UUID REFERENCES exercises (id),
-                                            muscle_tags UUID REFERENCES muscle_tags(id),
-                                            CONSTRAINT muscle_tag_exercices_pk PRIMARY KEY (exercise_id, muscle_tags)
-);
