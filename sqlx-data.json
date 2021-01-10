@@ -1,0 +1,125 @@
+{
+  "db": "PostgreSQL",
+  "6bbfd6c03c10dc14c6f449ffe314795ca29dff514f0bc2e870024563dd28a461": {
+    "query": "\n                    SELECT * FROM exercise WHERE exercise_id = $1\n                ",
+    "describe": {
+      "columns": [
+        {
+          "ordinal": 0,
+          "name": "exercise_id",
+          "type_info": "Uuid"
+        },
+        {
+          "ordinal": 1,
+          "name": "name",
+          "type_info": "Varchar"
+        },
+        {
+          "ordinal": 2,
+          "name": "description",
+          "type_info": "Varchar"
+        },
+        {
+          "ordinal": 3,
+          "name": "category",
+          "type_info": "Varchar"
+        },
+        {
+          "ordinal": 4,
+          "name": "category_icon",
+          "type_info": "Varchar"
+        },
+        {
+          "ordinal": 5,
+          "name": "image",
+          "type_info": "Varchar"
+        },
+        {
+          "ordinal": 6,
+          "name": "created_at",
+          "type_info": "Timestamp"
+        },
+        {
+          "ordinal": 7,
+          "name": "updated_at",
+          "type_info": "Timestamp"
+        }
+      ],
+      "parameters": {
+        "Left": [
+          "Uuid"
+        ]
+      },
+      "nullable": [
+        false,
+        false,
+        true,
+        false,
+        true,
+        true,
+        false,
+        false
+      ]
+    }
+  },
+  "de00286fdc33834b62dadcb8b8c72d7520965b658ace088cffc0ba05b2c2c186": {
+    "query": "\n                    SELECT * FROM exercise ORDER BY name\n                ",
+    "describe": {
+      "columns": [
+        {
+          "ordinal": 0,
+          "name": "exercise_id",
+          "type_info": "Uuid"
+        },
+        {
+          "ordinal": 1,
+          "name": "name",
+          "type_info": "Varchar"
+        },
+        {
+          "ordinal": 2,
+          "name": "description",
+          "type_info": "Varchar"
+        },
+        {
+          "ordinal": 3,
+          "name": "category",
+          "type_info": "Varchar"
+        },
+        {
+          "ordinal": 4,
+          "name": "category_icon",
+          "type_info": "Varchar"
+        },
+        {
+          "ordinal": 5,
+          "name": "image",
+          "type_info": "Varchar"
+        },
+        {
+          "ordinal": 6,
+          "name": "created_at",
+          "type_info": "Timestamp"
+        },
+        {
+          "ordinal": 7,
+          "name": "updated_at",
+          "type_info": "Timestamp"
+        }
+      ],
+      "parameters": {
+        "Left": []
+      },
+      "nullable": [
+        false,
+        false,
+        true,
+        false,
+        true,
+        true,
+        false,
+        false
+      ]
+    }
+  }
+}
