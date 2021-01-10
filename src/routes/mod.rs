@@ -1,5 +1,5 @@
 mod exercises_routes;
-mod routes;
+mod base_routes;
 
 pub use exercises_routes::init;
-pub use routes::base_route;
+pub use base_routes::base_route;
