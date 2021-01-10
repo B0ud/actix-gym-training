@@ -2,6 +2,7 @@ mod models;
 mod routes;
 
 use actix_web::{get, post, web, App, Error, HttpResponse, HttpServer, Responder};
+use anyhow::Result;
 use dotenv::dotenv;
 use env_logger::{Env, Target};
 use futures::{future::ok, stream::once};
@@ -9,7 +10,6 @@ use listenfd::ListenFd;
 use log::info;
 use sqlx::PgPool;
 use std::env;
-use anyhow::Result;
 
 #[get("/")]
 async fn hello() -> impl Responder {
@@ -61,6 +61,7 @@ async fn main() -> Result<()> {
             .service(stream)
             .route("/hey", web::get().to(manual_hello))
             .configure(routes::init)
+            .configure(routes::base_route)
     });
 
     server = if let Some(listener) = listenfd.take_tcp_listener(0)? {
