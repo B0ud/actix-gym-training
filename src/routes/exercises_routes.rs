@@ -26,3 +26,20 @@ pub fn init(cfg: &mut web::ServiceConfig) {
     cfg.service(find);
     cfg.service(find_all);
 }
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::config;
+    use actix_web::{test, App};
+
+    #[actix_rt::test]
+    async fn test_get_all_exercises() {
+        let db_pool = config::get_db_pool().await.unwrap();
+        let mut app = test::init_service(App::new().data(db_pool.clone()).configure(init)).await;
+
+        let req = test::TestRequest::get().uri("/exercises").to_request();
+        let resp = test::call_service(&mut app, req).await;
+        println!("{:?}", resp);
+        assert!(resp.status().is_success());
+    }
+}

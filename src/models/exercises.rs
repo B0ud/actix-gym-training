@@ -1,6 +1,6 @@
 use anyhow::Result;
 use chrono::NaiveDateTime;
-use serde::{Serialize};
+use serde::Serialize;
 use sqlx::{FromRow, PgPool};
 use uuid::Uuid;
 

@@ -1,3 +1,4 @@
+mod config;
 mod models;
 mod routes;
 
@@ -8,7 +9,6 @@ use env_logger::{Env, Target};
 use futures::{future::ok, stream::once};
 use listenfd::ListenFd;
 use log::info;
-use sqlx::PgPool;
 use std::env;
 
 #[get("/")]
@@ -48,8 +48,7 @@ async fn main() -> Result<()> {
     // this will enable us to keep application running during recompile: systemfd --no-pid -s http::5000 -- cargo watch -x run
     let mut listenfd = ListenFd::from_env();
 
-    let database_url = env::var("DATABASE_URL").expect("DATABASE_URL is not set in .env file");
-    let db_pool = PgPool::connect(&database_url).await?;
+    let db_pool = config::get_db_pool().await?;
 
     info!("Starting up");
 
