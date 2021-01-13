@@ -11,13 +11,24 @@ env:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
+    services:
+      postgres:
+        image: postgres
+        ports:
+          - 5432:5432
     steps:
     - uses: actions/checkout@v2
     - name: Build
       run: cargo build --verbose
+
+    - name: Migrate database
+      run: |
+        sudo apt-get install libpq-dev -y
+        cargo install --version=0.2.0 sqlx-cli --no-default-features --features postgres
+        sqlx database create
+        sqlx migrate run
+
     - name: Run tests
       run: cargo test --verbose
   
