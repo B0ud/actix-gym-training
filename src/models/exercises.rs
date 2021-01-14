@@ -1,7 +1,8 @@
 use anyhow::Result;
 use chrono::NaiveDateTime;
-use serde::Serialize;
-use sqlx::{FromRow, PgPool};
+use serde::{Deserialize, Serialize};
+use sqlx::postgres::PgRow;
+use sqlx::{FromRow, PgPool, Row};
 use uuid::Uuid;
 
 // this struct will be used to represent database record
@@ -15,6 +16,22 @@ pub struct Exercise {
     pub image: Option<String>,
     pub created_at: NaiveDateTime,
     pub updated_at: NaiveDateTime,
+}
+
+// this struct will use to receive user input
+#[derive(Serialize, Deserialize)]
+pub struct ExerciseRequest {
+    pub name: String,
+    pub description: Option<String>,
+    pub category: String,
+    pub category_icon: Option<String>,
+    pub image: Option<String>,
+}
+
+// this struct will use to receive user input
+#[derive(Serialize)]
+pub struct IdResponse {
+    pub id: Uuid
 }
 
 // Implementation for Exercise struct, functions for read/write/update and delete exercises from database
@@ -63,7 +80,27 @@ impl Exercise {
                 updated_at: rec.updated_at,
             });
         }
-
         Ok(exercises)
+    }
+
+    pub async fn create(exercise: ExerciseRequest, pool: &PgPool) -> Result<IdResponse> {
+        let id = sqlx::query(
+                 r#"
+                         INSERT INTO exercise(name, description, category, category_icon, image) VALUES ($1, $2, $3, $4, $5) RETURNING exercise_id
+                     "#,
+
+             )
+                     .bind(&exercise.name)
+                     .bind(&exercise.description)
+                     .bind(&exercise.category)
+                     .bind(&exercise.category_icon)
+                     .bind(&exercise.image)
+                     .map(|row: PgRow| {
+                        row.get(0)
+                     })
+                     .fetch_one(&*pool)
+                     .await?;
+
+        Ok(IdResponse{id})
     }
 }

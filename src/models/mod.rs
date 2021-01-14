@@ -1,3 +1,3 @@
 mod exercises;
 
-pub use exercises::Exercise;
+pub use exercises::{Exercise, ExerciseRequest};

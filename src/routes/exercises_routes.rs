@@ -1,10 +1,10 @@
-use crate::models::Exercise;
-use actix_web::{get, web, HttpResponse, Responder};
+use crate::models::{Exercise, ExerciseRequest};
+use actix_web::{get, post, web, HttpResponse, Responder};
 use log::{error, info};
 use sqlx::PgPool;
 use uuid::Uuid;
 
-#[get("/exercises/{id}")]
+#[get("/exercise/{id}")]
 async fn find(id: web::Path<Uuid>, db_pool: web::Data<PgPool>) -> impl Responder {
     info!(" [GET] /exercises/{:?} ", id);
     let result = Exercise::find_by_id(id.into_inner(), db_pool.get_ref()).await;
@@ -13,6 +13,22 @@ async fn find(id: web::Path<Uuid>, db_pool: web::Data<PgPool>) -> impl Responder
         Err(e) => {
             error!("Error : {:?}", e);
             HttpResponse::NotFound().body("Exercise not found")
+        }
+    }
+}
+
+#[post("/exercise")]
+async fn create(
+    exercise: web::Json<ExerciseRequest>,
+    db_pool: web::Data<PgPool>,
+) -> impl Responder {
+    info!(" [POST] /exercise ");
+    let result = Exercise::create(exercise.into_inner(), db_pool.get_ref()).await;
+    match result {
+        Ok(exercise) => HttpResponse::Ok().json(exercise),
+        Err(e) => {
+            error!("Error : {:?}", e);
+            HttpResponse::NotFound().body("Error during creation")
         }
     }
 }
@@ -34,6 +50,7 @@ async fn find_all(db_pool: web::Data<PgPool>) -> impl Responder {
 pub fn init(cfg: &mut web::ServiceConfig) {
     cfg.service(find);
     cfg.service(find_all);
+    cfg.service(create);
 }
 #[cfg(test)]
 mod tests {
