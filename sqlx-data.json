@@ -1,5 +1,29 @@
 {
   "db": "PostgreSQL",
+  "18d9d78ba16bd088801ec6b2ba3c9f7ea3ee89640e146640adbfd01d8482dd82": {
+    "query": "\n                     INSERT INTO exercise(name, description, category, category_icon, image) VALUES ($1, $2, $3, $4, $5) RETURNING exercise_id\n                ",
+    "describe": {
+      "columns": [
+        {
+          "ordinal": 0,
+          "name": "exercise_id",
+          "type_info": "Uuid"
+        }
+      ],
+      "parameters": {
+        "Left": [
+          "Varchar",
+          "Varchar",
+          "Varchar",
+          "Varchar",
+          "Varchar"
+        ]
+      },
+      "nullable": [
+        false
+      ]
+    }
+  },
   "6bbfd6c03c10dc14c6f449ffe314795ca29dff514f0bc2e870024563dd28a461": {
     "query": "\n                    SELECT * FROM exercise WHERE exercise_id = $1\n                ",
     "describe": {
