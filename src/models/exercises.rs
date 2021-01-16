@@ -1,8 +1,7 @@
 use anyhow::Result;
 use chrono::NaiveDateTime;
 use serde::{Deserialize, Serialize};
-use sqlx::postgres::PgRow;
-use sqlx::{FromRow, PgPool, Row};
+use sqlx::{FromRow, PgPool};
 use uuid::Uuid;
 
 // this struct will be used to represent database record
@@ -31,7 +30,7 @@ pub struct ExerciseRequest {
 // this struct will use to receive user input
 #[derive(Serialize)]
 pub struct IdResponse {
-    pub id: Uuid
+    pub id: Uuid,
 }
 
 // Implementation for Exercise struct, functions for read/write/update and delete exercises from database
@@ -84,23 +83,17 @@ impl Exercise {
     }
 
     pub async fn create(exercise: ExerciseRequest, pool: &PgPool) -> Result<IdResponse> {
-        let id = sqlx::query(
-                 r#"
-                         INSERT INTO exercise(name, description, category, category_icon, image) VALUES ($1, $2, $3, $4, $5) RETURNING exercise_id
-                     "#,
+        let rec = sqlx::query!(
+            r#"
+                     INSERT INTO exercise(name, description, category, category_icon, image) VALUES ($1, $2, $3, $4, $5) RETURNING exercise_id
+                "#,
+            exercise.name, exercise.description, exercise.category, exercise.category_icon, exercise.image,
+        )
+            .fetch_one(&*pool)
+            .await?;
 
-             )
-                     .bind(&exercise.name)
-                     .bind(&exercise.description)
-                     .bind(&exercise.category)
-                     .bind(&exercise.category_icon)
-                     .bind(&exercise.image)
-                     .map(|row: PgRow| {
-                        row.get(0)
-                     })
-                     .fetch_one(&*pool)
-                     .await?;
-
-        Ok(IdResponse{id})
+        Ok(IdResponse {
+            id: rec.exercise_id,
+        })
     }
 }
