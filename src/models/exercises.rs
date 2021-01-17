@@ -5,7 +5,7 @@ use sqlx::{FromRow, PgPool};
 use uuid::Uuid;
 
 // this struct will be used to represent database record
-#[derive(Serialize, FromRow)]
+#[derive(Serialize, FromRow, Deserialize)]
 pub struct Exercise {
     pub id: Uuid,
     pub name: String,
@@ -28,7 +28,7 @@ pub struct ExerciseRequest {
 }
 
 // this struct will use to receive user input
-#[derive(Serialize)]
+#[derive(Serialize,Deserialize)]
 pub struct IdResponse {
     pub id: Uuid,
 }

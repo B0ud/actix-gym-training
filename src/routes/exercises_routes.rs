@@ -25,7 +25,7 @@ async fn create(
     info!(" [POST] /exercise ");
     let result = Exercise::create(exercise.into_inner(), db_pool.get_ref()).await;
     match result {
-        Ok(exercise) => HttpResponse::Ok().json(exercise),
+        Ok(exercise) => HttpResponse::Created().json(exercise),
         Err(e) => {
             error!("Error : {:?}", e);
             HttpResponse::NotFound().body("Error during creation")
@@ -56,6 +56,7 @@ pub fn init(cfg: &mut web::ServiceConfig) {
 mod tests {
     use super::*;
     use crate::config;
+    use crate::models::IdResponse;
     use actix_web::{http, test, web::Bytes, App};
     use dotenv::dotenv;
     use env_logger::Target;
@@ -123,5 +124,33 @@ mod tests {
         //println!(" Response : {:?}", resp);
 
         assert_eq!(body, Bytes::from_static(b"Exercise not found"));
+    }
+
+    #[actix_rt::test]
+    async fn it_test_insert_one_exercise_and_get_it_by_id() {
+        let db_pool = database_log_setup().await;
+        let mut app = test::init_service(App::new().data(db_pool.clone()).configure(init)).await;
+
+        let payload = r#"{"name":"Biceps Curl Random","category":"EXERCICES DE BASE"}"#.as_bytes();
+
+        let req = test::TestRequest::post()
+            .uri("/exercise")
+            .header(http::header::CONTENT_TYPE, "application/json")
+            .set_payload(payload)
+            .to_request();
+        let resp = test::call_service(&mut app, req).await;
+
+        assert_eq!(resp.status(), http::StatusCode::CREATED);
+        let body : IdResponse  = test::read_body_json(resp).await;
+
+        let get_ret = test::TestRequest::get().uri(&*format!("/exercise/{}", body.id))
+            .header(http::header::CONTENT_TYPE, "application/json")
+            .to_request();
+
+        let resp = test::call_service(&mut app, get_ret).await;
+        let body_get : Exercise  = test::read_body_json(resp).await;
+
+        assert_eq!(body_get.name, String::from("Biceps Curl Random"));
+        assert_eq!(body_get.category, String::from("EXERCICES DE BASE"));
     }
 }
