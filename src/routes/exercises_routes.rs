@@ -94,7 +94,7 @@ mod tests {
         let mut app = test::init_service(App::new().data(db_pool.clone()).configure(init)).await;
 
         let req = test::TestRequest::get()
-            .uri("/exercises/wrong-id")
+            .uri("/exercise/wrong-id")
             .to_request();
         let resp = test::call_service(&mut app, req).await;
 
@@ -114,7 +114,7 @@ mod tests {
         let mut app = test::init_service(App::new().data(db_pool.clone()).configure(init)).await;
 
         let req = test::TestRequest::get()
-            .uri("/exercises/f4fd5306-0fc1-44c7-a680-333333333333")
+            .uri("/exercise/f4fd5306-0fc1-44c7-a680-333333333333")
             .to_request();
         let resp = test::call_service(&mut app, req).await;
 
