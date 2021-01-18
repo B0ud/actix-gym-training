@@ -28,7 +28,7 @@ async fn create(
         Ok(exercise) => HttpResponse::Created().json(exercise),
         Err(e) => {
             error!("Error : {:?}", e);
-            HttpResponse::NotFound().body("Error during creation")
+            HttpResponse::BadRequest().body("Error during creation")
         }
     }
 }
@@ -152,5 +152,23 @@ mod tests {
 
         assert_eq!(body_get.name, String::from("Biceps Curl Random"));
         assert_eq!(body_get.category, String::from("EXERCICES DE BASE"));
+    }
+
+    #[actix_rt::test]
+    async fn it_test_insert_one_exercise_error() {
+        let db_pool = database_log_setup().await;
+        let mut app = test::init_service(App::new().data(db_pool.clone()).configure(init)).await;
+
+        let payload = r#"{"wrongProperties":"Biceps Curl Random","wrongProperties2":"EXERCICES DE BASE"}"#.as_bytes();
+
+        let req = test::TestRequest::post()
+            .uri("/exercise")
+            .header(http::header::CONTENT_TYPE, "application/json")
+            .set_payload(payload)
+            .to_request();
+        let resp = test::call_service(&mut app, req).await;
+
+        assert_eq!(resp.status(), http::StatusCode::BAD_REQUEST);
+
     }
 }
