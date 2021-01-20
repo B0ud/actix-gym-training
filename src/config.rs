@@ -1,4 +1,5 @@
 //! Manage config
+use serde;
 use sqlx::{Error, PgPool, Pool, Postgres};
 use std::env;
 
