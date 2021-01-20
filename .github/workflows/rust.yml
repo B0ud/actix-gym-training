@@ -30,9 +30,21 @@ jobs:
           profile: minimal
           toolchain: stable
           override: true
+          
+    - name: Generate Cargo.lock
+      uses: actions-rs/cargo@v1
+      with:
+        command: generate-lockfile
+    
+    - name: Cache Dependencies
+      uses: Swatinem/rust-cache@v1.0.1  
+     
     - name: Build
-      run: cargo build --verbose
-
+      uses: actions-rs/cargo@v1
+      with:
+        command: build
+        args: --release --verbose
+    
     - name: Migrate database
       run: |
         sudo apt-get install libpq-dev -y
