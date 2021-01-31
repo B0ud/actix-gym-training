@@ -2,6 +2,7 @@ mod config;
 mod models;
 mod routes;
 
+use actix_web::middleware::Logger;
 use actix_web::{get, post, web, App, Error, HttpResponse, HttpServer, Responder};
 use anyhow::Result;
 use dotenv::dotenv;
@@ -54,6 +55,7 @@ async fn main() -> Result<()> {
 
     let mut server = HttpServer::new(move || {
         App::new()
+            .wrap(Logger::default())
             .data(db_pool.clone())
             .service(hello)
             .service(echo)
